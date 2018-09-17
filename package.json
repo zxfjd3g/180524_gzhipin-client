@@ -1,0 +1,28 @@
+{
+  "name": "gzhipin-client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd-mobile": "^2.2.5",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.9.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.1.0",
+    "react-app-rewired": "^1.6.2",
+    "react-scripts": "1.1.4",
+    "redux-devtools-extension": "^2.13.5"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
