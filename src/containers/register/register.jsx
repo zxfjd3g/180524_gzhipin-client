@@ -3,9 +3,9 @@ import {NavBar, WingBlank, List, WhiteSpace, InputItem, Radio, Button} from 'ant
 
 import Logo from '../../componnets/logo/logo'
 
+import {reqRegister} from '../../api'
+
 const ListItem = List.Item
-
-
 
 /*
 注册路由组件
@@ -29,6 +29,10 @@ export default class Register extends Component {
   // 注册的回调
   register = () => {
     console.log(this.state)
+
+    reqRegister(this.state).then(response => {
+      console.log(response.data) // {code:0, data: user}  {code:1, message: "此用户已用户"}
+    })
   }
 
   goLogin = () => {
