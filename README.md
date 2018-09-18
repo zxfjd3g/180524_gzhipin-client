@@ -23,3 +23,21 @@
         antd组件: NavBar/WingBlank/WhiteSpace/List/InputItem/Radio/Button
         路由跳转: this.props.history.replace('/login')
         收集表单输入数据: state/onChange/变量属性名
+        
+# day02
+
+## 代理的理解
+    1). 是什么?
+        具有特定功能的一些程序
+    2). 运行在哪?
+        客户端应用
+    3). 作用?
+        监视/拦截/转发请求
+    4). 配置代理
+        package.json中: "proxy": "http://localhost:4000"
+    5). 注意:
+        只是开发环境使用, 生产环境没有
+        
+## redux管理哪些数据
+    1). 多个组件共享的状态
+    2). 从后台获取的数据
