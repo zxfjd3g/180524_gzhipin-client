@@ -1,7 +1,28 @@
 import React, {Component} from 'react'
 import {List, Grid} from 'antd-mobile'
+import PropTypes from 'prop-types'
 
 export default class HeaderSelector extends Component {
+
+  static propTypes = {
+    setHeader: PropTypes.func.isRequired
+  }
+
+  state = {
+    icon: null, // 当前选择的图片对象
+  }
+
+  // 选择头像的回调
+  selectHeader = ({icon, text}) => { // 对应的数据对象
+    // 更新自身的icon状态
+    this.setState({
+      icon
+    })
+
+    // 更新父组件的header状态
+    this.props.setHeader(text)
+  }
+
   render () {
 
     const headerList = []
@@ -14,10 +35,15 @@ export default class HeaderSelector extends Component {
       })
     }
 
+    // 动态确定头部
+    const {icon} = this.state
+    const headerUI = icon ? <div><span>已选择头像</span><img src={icon}/></div> : '请选择头像'
+
     return (
-      <List renderHeader={() => '请选择头像'}>
+      <List renderHeader={() => headerUI}>
         <Grid data={headerList}
-              columnNum={5}></Grid>
+              columnNum={5}
+              onClick={this.selectHeader}></Grid>
       </List>
     )
   }

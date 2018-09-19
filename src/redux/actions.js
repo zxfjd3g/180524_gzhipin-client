@@ -5,19 +5,25 @@
  */
 import {
   reqRegister,
-  reqLogin
+  reqLogin,
+  reqUpdateUser
 } from '../api'
 
 import {
   AUTH_SUCCESS,
-  ERROR_MSG
+  ERROR_MSG,
+  RECEIVE_USER,
+  RESET_USER
 } from './action-types'  // 有几个action type就会定义几个同步action
 
 // 注册/登陆成功的同步action
 const authSuccess = (user) => ({type: AUTH_SUCCESS, data:user})
 // 注册/登陆失败的同步action
 const errorMsg = (msg) => ({type: ERROR_MSG, data:msg})
-
+// 接收用户的同步action
+const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
+// 重置用户的同步action
+const resetUser = (msg) => ({type: RESET_USER, data: msg})
 
 
 /*
@@ -76,6 +82,24 @@ export function login(username, password) {
       const msg = result.msg
       // 分发失败同步action
       dispatch(errorMsg(msg))
+    }
+  }
+}
+
+
+/*
+更新用户的异步action
+ */
+export function updateUser(user) {
+  return async dispatch => {
+    const response = await reqUpdateUser(user)
+    const result = response.data
+    if(result.code===0) { // 更新用户成功
+      const user = result.data
+      dispatch(receiveUser(user))
+    } else { // 更新失败
+      const msg = result.msg
+      dispatch(resetUser(msg))
     }
   }
 }
