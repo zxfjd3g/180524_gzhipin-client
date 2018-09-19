@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
 import {NavBar, WingBlank, List, WhiteSpace, InputItem, Button} from 'antd-mobile'
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
+import {login} from '../../redux/actions'
 import Logo from '../../componnets/logo/logo'
 
 /*
 登陆路由组件
  */
-export default class Login extends Component {
+class Login extends Component {
 
   state = {
     username: '',
@@ -22,7 +25,9 @@ export default class Login extends Component {
 
   // 登陆的回调
   login = () => {
-    console.log(this.state)
+    // console.log(this.state)
+    const {username, password} = this.state
+    this.props.login(username, password)
   }
 
   goRegister = () => {
@@ -31,12 +36,19 @@ export default class Login extends Component {
   }
 
   render() {
+
+    const {redirectTo, msg} = this.props.user
+    if(redirectTo) {
+      return <Redirect to={redirectTo}/>
+    }
+
     return (
       <div>
         <NavBar>硅谷直聘</NavBar>
         <Logo/>
         <WingBlank>
           <List>
+            {msg ? <p className='error-msg'>{msg}</p> : null}
             <InputItem
               placeholder='请输入用户名'
               onChange={val => this.handleChange('username', val)}
@@ -63,3 +75,8 @@ export default class Login extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({user: state.user}),
+  {login}
+)(Login)
