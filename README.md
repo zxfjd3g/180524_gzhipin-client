@@ -87,3 +87,38 @@
         解决开发环境的跨域请求问题: 监视/拦截/转发请求
     4). 配置代理
         告诉代理一些信息: 转发的目标地址
+
+
+# day03
+ 
+## 1. 完善注册/登陆功能
+     1). 动态计算成功后跳转的path: 设计工具函数
+     2). 前台表单验证: 在action中 
+     3). 使用async和await简化poromise的使用
+ 
+## 2. 用户信息完善
+    1). 用户信息完善界面路由组件: 
+        组件: dashen-info/laoban-info/header-selector
+        界面: Navbar/List/Grid/InputItem/Button/TextareaItem
+        收集用户输入数据: onChange监听/state 
+        注册2级路由: 在main路由组件
+    2). 后台路由处理: 更新用户信息
+    3). 前台接口请求函数
+    4). 前台redux
+        action-types
+        异步action/同步action
+        reducer
+    5). 前台组件
+        UI组件包装生成容器组件
+        读取状态数据
+        更新状态
+ 
+## 3. 主界面
+    1). 拆分界面, 抽取组件(一般/路由)
+    2). 封装导航路由相关数据(数组/对象)
+    3). NavFooter组件
+        1). 过滤navList
+        2). 包装一般组件使其可以访问路由相关属性: withRouter()
+        3). 通过js实现路由跳转(编程式导航: js路径跳转): history.replace()
+        
+        

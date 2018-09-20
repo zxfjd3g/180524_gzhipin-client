@@ -6,7 +6,8 @@
 import {
   reqRegister,
   reqLogin,
-  reqUpdateUser
+  reqUpdateUser,
+  reqUser
 } from '../api'
 
 import {
@@ -100,6 +101,24 @@ export function updateUser(user) {
     } else { // 更新失败
       const msg = result.msg
       dispatch(resetUser(msg))
+    }
+  }
+}
+
+
+/*
+获取当前用户的异步action
+ */
+export function getUser() {
+  return async dispatch => {
+    // 发ajax请求, 获取user
+    const response = await reqUser()
+    const result = response.data
+    // 分发同步action
+    if(result.code===0) {// 成功得到user
+      dispatch(receiveUser(result.data))
+    } else { // 失败
+      dispatch(resetUser(result.msg))
     }
   }
 }
