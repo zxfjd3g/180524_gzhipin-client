@@ -3,6 +3,9 @@
 同步action: 对象
 异步action: dispatch函数
  */
+// 引入客户端io
+import io from 'socket.io-client'
+
 import {
   reqRegister,
   reqLogin,
@@ -138,6 +141,25 @@ export function getUserList(type) {
       const userList = result.data
       dispatch(receiveUserList(userList))
     }
+  }
+}
+
+// 连接服务器, 得到代表连接的socket对象
+const socket = io('ws://localhost:4000')
+
+// 绑定监听, 接收服务发送的消息
+socket.on('receiveMsg', (chatMsg) => {
+  console.log('浏览器接收到服务器返回的消息', chatMsg)
+})
+
+/*
+发送聊天消息的异步action
+ */
+export function sendMsg ({content, from, to}) {
+  return dispatch => {
+    // 发消息
+    socket.emit('sendMsg', {content, from, to})
+    console.log('浏览器向服务器发消息', {content, from, to})
   }
 }
 

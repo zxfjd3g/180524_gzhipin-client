@@ -9,6 +9,7 @@ import Laoban from '../laoban/laoban'
 import Dashen from '../dashen/dashen'
 import Message from '../message/message'
 import Personal from '../personal/personal'
+import Chat from '../chat/chat'
 import {connect} from 'react-redux'
 import {getUser} from '../../redux/actions'
 import {getRedirectPath} from '../../utils'
@@ -111,6 +112,10 @@ class Main extends Component {
           <Route path='/dashen' component={Dashen}/>
           <Route path='/message' component={Message}/>
           <Route path='/personal' component={Personal}/>
+
+          <Route path='/chat/:userid' component={Chat}/>
+
+
         </Switch>
 
         {currentNav ? <NavFooter navList={this.navList}/> : null}
