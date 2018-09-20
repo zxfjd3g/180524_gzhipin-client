@@ -30,7 +30,7 @@ export default class HeaderSelector extends Component {
       headerList.push({
         // 必须用require()动态加载一个图片模块
         // webpack默认就可以编译打包ES6和commonjs
-        icon: require('./images/头像'+(i+1)+'.png'), // 图片对象
+        icon: require('../../assets/images/头像'+(i+1)+'.png'), // 图片对象
         text: '头像'+(i+1)
       })
     }
