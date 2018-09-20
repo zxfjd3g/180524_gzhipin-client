@@ -14,6 +14,8 @@ import store from './redux/store'
 
 import './assets/css/index.less'
 
+import './test/socketio_test'
+
 ReactDOM.render((
   <Provider store={store}>
     <HashRouter>
