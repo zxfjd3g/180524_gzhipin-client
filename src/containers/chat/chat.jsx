@@ -45,7 +45,7 @@ class Chat extends Component {
     const chatId = [meId, targetId].sort().join('-')
 
     // 得到当前登陆用户与目标用户的所有msg组件的数组
-    const msgs = chatMsgs.filter(msg => msg.chat_id=chatId)
+    const msgs = chatMsgs.filter(msg => msg.chat_id===chatId)
 
     // 得到目标用户
     const targetUser = users[targetId]
