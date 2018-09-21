@@ -21,3 +21,9 @@ export const reqUser = () => ajax(BASE + '/user')
 
 // 请求获取指定类型的用户列表
 export const reqUserList = (type) => ajax(BASE+'/userlist', {type})
+
+// 请求获取当前用户的所有聊天记录
+export const reqChatMsgList = () => ajax('/msglist')
+
+// 标识查看了指定用户发送的聊天信息
+export const reqReadChatMsg = (from) => ajax('/readmsg', {from}, 'POST')

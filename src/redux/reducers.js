@@ -11,7 +11,9 @@ import {
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
-  RECEIVE_USER_LIST
+  RECEIVE_USER_LIST,
+  RECEIVE_MSG_LIST,
+  RECEIVED_MSG
 } from './action-types'
 
 // 管理user数据
@@ -50,12 +52,41 @@ function userList (state=initUserList, action) {
 }
 
 
+// 管理chat数据
+const initChat = {
+  users: {}, // 包含所有用户信息的容器对象: {[id]: {username, header}}
+  chatMsgs: [], // 当前登陆用户相关的所有msg的数组
+  unReadCount: 0, // 总的未读数量
+}
+function chat(state=initChat, action) {
+  switch (action.type) {
+    case RECEIVE_MSG_LIST:
+      const {users, chatMsgs} = action.data
+      return {
+        users,
+        chatMsgs,
+        unReadCount: 0
+      }
+    case RECEIVED_MSG:
+      const chatMsg = action.data
+      return {
+        users: state.users,
+        chatMsgs: [...state.chatMsgs, chatMsg],
+        unReadCount: 0
+      }
+    default:
+      return state
+  }
+}
+
+
 export default combineReducers({
   user,
-  userList
+  userList,
+  chat
 })
 
 /*
 combineReducers()执行的结果是一个新的reducer函数
-整合后的reducer管理的状态结构为:  对象: {user: user(), userList: userList()}
+整合后的reducer管理的状态结构为:  对象: {user: user(), userList: userList(), chat: chat()}
  */

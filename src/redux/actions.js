@@ -11,7 +11,8 @@ import {
   reqLogin,
   reqUpdateUser,
   reqUser,
-  reqUserList
+  reqUserList,
+  reqChatMsgList
 } from '../api'
 
 import {
@@ -19,7 +20,9 @@ import {
   ERROR_MSG,
   RECEIVE_USER,
   RESET_USER,
-  RECEIVE_USER_LIST
+  RECEIVE_USER_LIST,
+  RECEIVE_MSG_LIST,
+  RECEIVED_MSG
 } from './action-types'  // 有几个action type就会定义几个同步action
 
 // 注册/登陆成功的同步action
@@ -32,6 +35,10 @@ const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
 export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 // 接收用户列表的同步action
 export const receiveUserList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
+// 接收消息列表的同步action
+export const receiveMsgList = ({users, chatMsgs}) => ({type: RECEIVE_MSG_LIST, data: {users, chatMsgs}})
+// 接收一个新消息的同步action
+export const receiveMsg = (chatMsg) => ({type: RECEIVED_MSG, data: chatMsg})
 
 
 /*
@@ -57,6 +64,8 @@ export function register({username, password, password2, type}) {
     const result = response.data // {code:0/1, msg: '', data: user}
     if(result.code==0) { // 成功了
       const user = result.data
+      // 获取消息列表
+      getChatMsgs(dispatch, user._id)
       // 分发成功的同步action
       dispatch(authSuccess(user))
     } else { // 失败
@@ -84,6 +93,8 @@ export function login(username, password) {
     const result = response.data // {code:0/1, msg: '', data: user}
     if(result.code==0) { // 成功了
       const user = result.data
+      // 获取消息列表
+      getChatMsgs(dispatch, user._id)
       // 分发成功的同步action
       dispatch(authSuccess(user))
     } else { // 失败
@@ -123,6 +134,8 @@ export function getUser() {
     const result = response.data
     // 分发同步action
     if(result.code===0) {// 成功得到user
+      // 获取消息列表
+      getChatMsgs(dispatch, result.data._id)
       dispatch(receiveUser(result.data))
     } else { // 失败
       dispatch(resetUser(result.msg))
@@ -147,11 +160,6 @@ export function getUserList(type) {
 // 连接服务器, 得到代表连接的socket对象
 const socket = io('ws://localhost:4000')
 
-// 绑定监听, 接收服务发送的消息
-socket.on('receiveMsg', (chatMsg) => {
-  console.log('浏览器接收到服务器返回的消息', chatMsg)
-})
-
 /*
 发送聊天消息的异步action
  */
@@ -160,6 +168,34 @@ export function sendMsg ({content, from, to}) {
     // 发消息
     socket.emit('sendMsg', {content, from, to})
     console.log('浏览器向服务器发消息', {content, from, to})
+  }
+}
+
+/*
+获取当前用户相关的所有chatMsg的数组
+ */
+async function getChatMsgs(dispatch, meId) {
+
+  // 如何保存一段代码只执行一次
+  if(!socket.hasListen) {
+    socket.hasListen = true
+    // 绑定监听, 接收服务发送的消息
+    socket.on('receiveMsg', (chatMsg) => {
+      console.log('浏览器接收到服务器返回的消息', chatMsg)
+      if(chatMsg.from===meId || chatMsg.to===meId) {
+        dispatch(receiveMsg(chatMsg))
+      }
+    })
+  }
+
+
+  // 请求获取chatMsgList
+  const response = await reqChatMsgList()
+  const result = response.data
+  if(result.code===0) {
+    const {users, chatMsgs} = result.data
+    // 分发同步action
+    dispatch(receiveMsgList({users, chatMsgs}))
   }
 }
 
