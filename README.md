@@ -124,9 +124,9 @@
 # day04
 ## 1. 整体main组件的逻辑
     1). 是否登陆过: cookie中是否有userid  ---> 跳转login
-    2). 当前是否已经登陆: state中的user中是否有_id
+    2). 当前是否已经登陆: state中的user中是否有_id  --> 显示请求的提示信息界面
     3). 实现自动登陆: 在componentDidMount()发请求获取当前用户信息
-    4). 根路径的自动跳转: 查看路由的相关API
+    4). 根路径的自动跳转: 跳转到对应的路由界面
     5). 404页面的设计: NotFound组件的path不需要指
 
 ## 2. Personal组件
@@ -161,5 +161,5 @@
              chat组件: 收集数据分发发消息的异步action
              actions: 连接socketio服务器/ 发送消息
          后台应用
-             models: 定义操作chats集合的ChatModel
+             models: 定义操作chatMsgs集合的ChatModel
              socketIO: 监视连接 / 监听浏览器发送的聊天消息 / 保存聊天信息 / 向所有连接的浏览器端发消息

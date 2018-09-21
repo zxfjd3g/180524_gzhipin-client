@@ -10,9 +10,12 @@ import Dashen from '../dashen/dashen'
 import Message from '../message/message'
 import Personal from '../personal/personal'
 import Chat from '../chat/chat'
+import NotFound from '../../componnets/not-found/not-found'
+
 import {connect} from 'react-redux'
 import {getUser} from '../../redux/actions'
 import {getRedirectPath} from '../../utils'
+
 
 import NavFooter from '../../componnets/nav-footer/nav-footer'
 
@@ -114,6 +117,8 @@ class Main extends Component {
           <Route path='/personal' component={Personal}/>
 
           <Route path='/chat/:userid' component={Chat}/>
+
+          <Route component={NotFound} />
 
 
         </Switch>
