@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {NavBar, List, InputItem} from 'antd-mobile'
+import {NavBar, List, InputItem, Icon, Grid} from 'antd-mobile'
 
 import {sendMsg} from '../../redux/actions'
 
@@ -12,7 +12,8 @@ const Item = List.Item
 class Chat extends Component {
 
   state = {
-    content: ''
+    content: '',
+    isShow: false, // 标识表情列表是否显示
   }
 
   send = () => {
@@ -26,8 +27,41 @@ class Chat extends Component {
     this.props.sendMsg({content, from, to})
 
     this.setState({
-      content: ''
+      content: '',
+      isShow: false
     })
+  }
+
+  toggleShow =  () => {
+
+    const isShow = !this.state.isShow
+
+    if(isShow) {
+      // 异步手动派发resize事件,解决表情列表显示的bug
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'))
+      }, 0)
+    }
+
+    this.setState({isShow})
+  }
+
+  componentWillMount () {
+    const emojis = ['😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣']
+    this.emojis = emojis.map(emoji => ({text: emoji}) )
+  }
+
+  componentDidMount() {
+    // 初始显示列表
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  componentDidUpdate () {
+    // 更新显示列表
+    window.scrollTo(0, document.body.scrollHeight)
   }
 
   render () {
@@ -49,12 +83,22 @@ class Chat extends Component {
 
     // 得到目标用户
     const targetUser = users[targetId]
+    if(!targetUser) { // 如果还没查询得到数据
+      // return null // 先暂时不做任何显示
+      return <div>LOADING...</div>  // 先暂时显示一个加载中的提示
+    }
     const targetHeader = require(`../../assets/images/${targetUser.header}.png`)
 
     return (
       <div id='chat-page'>
-        <NavBar>aa</NavBar>
-        <List>
+        <NavBar
+          className='fix-top'
+          icon={<Icon type='left'/>}
+          onLeftClick={() => this.props.history.goBack()}
+        >
+          {targetUser.username}
+        </NavBar>
+        <List style={{marginTop: 50, marginBottom: 50}}>
           {
             msgs.map(msg => {
 
@@ -86,11 +130,30 @@ class Chat extends Component {
           <InputItem
             placeholder="请输入"
             extra={
-              <span onClick={this.send}>发送</span>
+              <div>
+                <span onClick={this.toggleShow}>😁</span>
+                <span onClick={this.send}>发送</span>
+              </div>
             }
             onChange={val => this.setState({content: val})}
             value={this.state.content}
+            onFocus = {() => this.setState({isShow: false})}
           />
+
+          {
+            this.state.isShow ? (
+              <Grid
+                data={this.emojis}
+                columnNum={8}
+                carouselMaxRow={4}
+                isCarousel={true}
+                onClick={(item) => {
+                  this.setState({content: this.state.content+item.text})
+                }}
+              />
+            ) : null
+          }
+
         </div>
       </div>
     )
