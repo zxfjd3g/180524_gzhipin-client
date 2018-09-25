@@ -123,7 +123,7 @@ class Main extends Component {
 
         </Switch>
 
-        {currentNav ? <NavFooter navList={this.navList}/> : null}
+        {currentNav ? <NavFooter navList={this.navList} unReadCount={this.props.unReadCount}/> : null}
 
       </div>
     )
@@ -131,7 +131,7 @@ class Main extends Component {
 }
 
 export default connect(
-  state => ({user: state.user}),
+  state => ({user: state.user, unReadCount: state.chat.unReadCount}),
   {getUser}
 )(Main)
 

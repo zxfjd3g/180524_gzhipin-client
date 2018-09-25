@@ -19,3 +19,5 @@ export const RECEIVE_USER_LIST = 'receive_user_list'
 export const RECEIVE_MSG_LIST = 'receive_msg_list'
 // 接收消息
 export const RECEIVED_MSG = 'receive_msg'
+// 更新消息为已读
+export const MSG_READ = 'msg_read'

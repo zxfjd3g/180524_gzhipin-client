@@ -12,7 +12,8 @@ import {
   reqUpdateUser,
   reqUser,
   reqUserList,
-  reqChatMsgList
+  reqChatMsgList,
+  reqReadChatMsg
 } from '../api'
 
 import {
@@ -22,7 +23,8 @@ import {
   RESET_USER,
   RECEIVE_USER_LIST,
   RECEIVE_MSG_LIST,
-  RECEIVED_MSG
+  RECEIVED_MSG,
+  MSG_READ
 } from './action-types'  // 有几个action type就会定义几个同步action
 
 // 注册/登陆成功的同步action
@@ -36,10 +38,11 @@ export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 // 接收用户列表的同步action
 export const receiveUserList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
 // 接收消息列表的同步action
-export const receiveMsgList = ({users, chatMsgs}) => ({type: RECEIVE_MSG_LIST, data: {users, chatMsgs}})
+export const receiveMsgList = ({users, chatMsgs, meId}) => ({type: RECEIVE_MSG_LIST, data: {users, chatMsgs, meId}})
 // 接收一个新消息的同步action
-export const receiveMsg = (chatMsg) => ({type: RECEIVED_MSG, data: chatMsg})
-
+export const receiveMsg = (chatMsg, meId) => ({type: RECEIVED_MSG, data: {chatMsg, meId}})
+// 更新消息为已读的同步action
+export const msgRead = ({count, from, to}) => ({type: MSG_READ, data: {count, from, to}})
 
 /*
 注册的异步action
@@ -183,7 +186,7 @@ async function getChatMsgs(dispatch, meId) {
     socket.on('receiveMsg', (chatMsg) => {
       console.log('浏览器接收到服务器返回的消息', chatMsg)
       if(chatMsg.from===meId || chatMsg.to===meId) {
-        dispatch(receiveMsg(chatMsg))
+        dispatch(receiveMsg(chatMsg, meId))
       }
     })
   }
@@ -195,7 +198,22 @@ async function getChatMsgs(dispatch, meId) {
   if(result.code===0) {
     const {users, chatMsgs} = result.data
     // 分发同步action
-    dispatch(receiveMsgList({users, chatMsgs}))
+    dispatch(receiveMsgList({users, chatMsgs, meId}))
+  }
+}
+
+/*
+查看某个聊天消息: 将未读消息标识为已读的异步action
+ */
+export function readMsg(from, to) {
+  return async dispatch => {
+    const response = await reqReadChatMsg(from); // alt + => <=
+    const result = response.data
+    if(result.code===0) {
+      // 更新为已读的数量
+      const count = result.data
+      dispatch(msgRead({from, to, count}))
+    }
   }
 }
 

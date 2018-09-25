@@ -13,7 +13,8 @@ import {
   RESET_USER,
   RECEIVE_USER_LIST,
   RECEIVE_MSG_LIST,
-  RECEIVED_MSG
+  RECEIVED_MSG,
+  MSG_READ
 } from './action-types'
 
 // 管理user数据
@@ -61,19 +62,35 @@ const initChat = {
 function chat(state=initChat, action) {
   switch (action.type) {
     case RECEIVE_MSG_LIST:
-      const {users, chatMsgs} = action.data
+      var {users, chatMsgs, meId} = action.data
       return {
         users,
         chatMsgs,
-        unReadCount: 0
+        unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal + (!msg.read&&msg.to===meId ? 1 : 0), 0)
       }
     case RECEIVED_MSG:
-      const chatMsg = action.data
+      var {chatMsg, meId} = action.data
       return {
         users: state.users,
         chatMsgs: [...state.chatMsgs, chatMsg],
-        unReadCount: 0
+        unReadCount: state.unReadCount + (chatMsg.to===meId&&!chatMsg.read ? 1 : 0)
       }
+    case MSG_READ:
+      const {count, from, to} = action.data
+
+      return {
+        users: state.users,
+        // 将指定from和to的未读消息变化为true
+        chatMsgs: state.chatMsgs.map(msg => {
+          if(msg.from===from && msg.to===to && !msg.read) {
+            return {...msg, read: true}
+          } else {
+            return msg
+          }
+        }),
+        unReadCount: state.unReadCount-count
+      }
+
     default:
       return state
   }

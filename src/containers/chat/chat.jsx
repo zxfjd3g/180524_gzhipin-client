@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {NavBar, List, InputItem, Icon, Grid} from 'antd-mobile'
 
-import {sendMsg} from '../../redux/actions'
+import {sendMsg, readMsg} from '../../redux/actions'
 
 const Item = List.Item
 
@@ -62,6 +62,14 @@ class Chat extends Component {
   componentDidUpdate () {
     // 更新显示列表
     window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  // 在组件对象死亡之前(退出之前)
+  componentWillUnmount () {
+    // 分异步action: 向后台发请求, 更新状态
+    const from = this.props.match.params.userid
+    const to = this.props.user._id
+    this.props.readMsg(from, to)
   }
 
   render () {
@@ -162,5 +170,5 @@ class Chat extends Component {
 
 export default connect(
   state => ({user: state.user, chat: state.chat}),
-  {sendMsg}
+  {sendMsg, readMsg}
 )(Chat)
