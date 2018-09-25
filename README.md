@@ -168,7 +168,7 @@
 ## 1. chat组件
     1). 后台
         models
-          添加操作chats集合的ChatModel
+          添加操作chatMsgs集合的ChatModel
         routes
           获取当前用户的聊天消息列表: /msglist
           修改指定消息为已读: /readmsg
@@ -186,6 +186,6 @@
         组件
           读取user/chat状态数据显示
           发送聊天消息
-          对chatMsg进行过滤
+          对chatMsgs进行过滤
           实现自动滑动到底部显示
           表情包功能
