@@ -163,3 +163,29 @@
          后台应用
              models: 定义操作chatMsgs集合的ChatModel
              socketIO: 监视连接 / 监听浏览器发送的聊天消息 / 保存聊天信息 / 向所有连接的浏览器端发消息
+             
+# day05
+## 1. chat组件
+    1). 后台
+        models
+          添加操作chats集合的ChatModel
+        routes
+          获取当前用户的聊天消息列表: /msglist
+          修改指定消息为已读: /readmsg
+        socketio
+          接收浏览器客户发送的消息数据, 保存完成后, 群发给所有连接的浏览器
+    2). 前台
+        api
+          reqChatMsgList()
+          reqReadChatMsg(from)
+        redux
+          异步获取消息列表
+          绑定接收新的聊天消息的监听
+          发送聊天消息给服务器
+          管理chat数据的reducer
+        组件
+          读取user/chat状态数据显示
+          发送聊天消息
+          对chatMsg进行过滤
+          实现自动滑动到底部显示
+          表情包功能
