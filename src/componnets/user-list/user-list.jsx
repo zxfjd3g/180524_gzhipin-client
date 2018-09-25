@@ -19,7 +19,7 @@ class UserList extends Component {
     // 过滤得到完善了信息的user数组
     const userList = this.props.userList.filter(user => user.header)
     return (
-      <WingBlank>
+      <WingBlank style={{marginTop: 50, marginBottom: 50}}>
         {
           userList.map((user, index) => (
             <div key={user._id}>
